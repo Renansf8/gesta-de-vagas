@@ -3,6 +3,7 @@ package br.com.renanferreira.gestao_vagas.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,10 +12,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 // Configurações que eu quero que seja feita assim que startar a aplicação
 @Configuration
+@EnableMethodSecurity // Para habilitar o PreAuthorize
 public class SecurityConfig {
 
   @Autowired
   private SecurityFilter securityFilter;
+
+  @Autowired
+  private SecurityCandidateFilter securityCandidateFilter;
   
   // Bean -> Sobrescrever um método já gerenciado pelo spring
   @Bean
@@ -23,12 +28,13 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> {
         auth.requestMatchers("/candidate/").permitAll()
         .requestMatchers("/company/").permitAll()
-        .requestMatchers("/auth/company").permitAll()
-        .requestMatchers("/auth/candidate").permitAll();
+        .requestMatchers("/company/auth").permitAll()
+        .requestMatchers("/candidate/auth").permitAll();
         auth.anyRequest().authenticated();
       })
+      .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
       .addFilterBefore(securityFilter, BasicAuthenticationFilter.class)
-    ;
+      ;
     return http.build();
   }
 

@@ -10,4 +10,4 @@ Projeto para o gerenciamento de vagas de emprego
 🧑‍💻 Tecnologias utilizadas
 - Java
 - Spring Boot
-- HSQLDB
+- H2 Database

@@ -11,3 +11,4 @@ Projeto para o gerenciamento de vagas de emprego
 - Java
 - Spring Boot
 - H2 Database
+- JUnit
